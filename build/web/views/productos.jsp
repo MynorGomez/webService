@@ -25,7 +25,7 @@
 
 <body>
 <%
-    // 🔹 Contexto del proyecto (por ejemplo /Sistema)
+    // Contexto del proyecto (por ejemplo /SistemaFinal)
     String path = request.getContextPath();
 %>
 
@@ -96,7 +96,7 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <!-- enctype agregado -->
-            <form action="../sr_producto" method="post" id="formProducto" enctype="multipart/form-data">
+            <form action="<%= request.getContextPath() %>/sr_producto" method="post" id="formProducto" enctype="multipart/form-data">
                 <div class="modal-header bg-success text-white">
                     <h5 class="modal-title" id="tituloModal"><i class="bi bi-box-seam"></i> Nuevo Producto</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
@@ -132,6 +132,7 @@
                             <label class="form-label">Imagen del Producto</label>
                             <input type="file" name="file_imagen" id="file_imagen" class="form-control" accept="image/*">
                             <img id="imgPreview" class="product-img-preview d-none">
+                            <small class="text-muted">Si no seleccionas una nueva imagen, se conservará la actual.</small>
                         </div>
                         <div class="col-md-2">
                             <label class="form-label">Precio Costo</label>
@@ -188,7 +189,6 @@ function editarProducto(fila){
     $("#txt_venta").val(fila.dataset.venta);
     $("#txt_existencia").val(fila.dataset.existencia);
 
-    // Vista previa de imagen con contextPath
     const imgUrl = fila.dataset.imagen;
     if(imgUrl)
         $("#imgPreview").attr("src", "<%= path %>/" + imgUrl).removeClass("d-none");

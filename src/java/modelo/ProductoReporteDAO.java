@@ -6,6 +6,7 @@ import utils.ConexionDB;
 
 public class ProductoReporteDAO {
 
+    // 🔹 Productos más vendidos
     public static List<ProductoReporte> obtenerProductosMasVendidos() {
         List<ProductoReporte> lista = new ArrayList<>();
         String sql = "SELECT p.producto, SUM(vd.cantidad) AS total_vendido, "
@@ -35,12 +36,13 @@ public class ProductoReporteDAO {
         return lista;
     }
 
+    // 🔹 Productos más comprados
     public static List<ProductoReporte> obtenerProductosMasComprados() {
         List<ProductoReporte> lista = new ArrayList<>();
-        String sql = "SELECT p.producto, SUM(dc.cantidad) AS total_comprado, "
-                   + "SUM(dc.cantidad * dc.precio_costo) AS total_q "
-                   + "FROM detalle_compras dc "
-                   + "INNER JOIN productos p ON dc.id_producto = p.id_producto "
+        String sql = "SELECT p.producto, SUM(cd.cantidad) AS total_comprado, "
+                   + "SUM(cd.cantidad * cd.precio_unitario) AS total_q "
+                   + "FROM compras_detalle cd "
+                   + "INNER JOIN productos p ON cd.id_producto = p.id_producto "
                    + "GROUP BY p.producto "
                    + "ORDER BY total_comprado DESC "
                    + "LIMIT 10;";
