@@ -106,7 +106,6 @@
       transform: scale(1.03);
     }
 
-    /* 🔹 Botón de crear cuenta */
     .btn-create {
       width: 100%;
       border-radius: 25px;
@@ -146,7 +145,6 @@
       <button type="submit" class="btn-login">Entrar</button>
     </form>
 
-    <!-- 🔹 Botón Crear Cuenta -->
     <div class="mt-3">
       <button type="button" class="btn-create" onclick="window.location='register.jsp'">
         Crear Cuenta
@@ -166,7 +164,8 @@
     };
 
     try {
-      const res = await fetch("http://localhost:5119/api/auth/login", {
+      // 🔹 Llamada al API externo (.NET)
+      const res = await fetch("http://18.118.129.255:5119/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data)
@@ -178,8 +177,11 @@
       if (json.token) {
         rocket.classList.add("launch");
         $("#msg").html("<div class='text-success mt-2'>Acceso concedido 🚀</div>");
+        
+        // 🔹 Guardar sesión en Tomcat
         setTimeout(() => {
           $.post("sr_login", { token: json.token, usuario: data.usuario }, function(){
+            // ✅ Redirigir al panel principal
             window.location = "index.jsp";
           });
         }, 1000);
