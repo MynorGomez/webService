@@ -5,31 +5,36 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class ConexionDB {
-    private static final String URL = "jdbc:mysql://127.0.0.1:3306/db_empresa";
-    private static final String USER = "root";
-    private static final String PASSWORD = "Minato15@"; // ⚠️ cambia si tu contraseña es diferente
-    // No mantenemos una Connection en campo. Creamos y retornamos una nueva conexión por llamada.
-        public ConexionDB() {
+    private Connection conexion;
+
+    // ✅ URL con parámetros recomendados
+    private final String url = "jdbc:mysql://127.0.0.1:3306/db_empresa?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
+    private final String usuario = "web_user";
+    private final String clave = "Web2025@";
+    private final String driver = "com.mysql.cj.jdbc.Driver";
+
+    public ConexionDB() {
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            System.err.println("❌ Error: No se encontró el driver MySQL JDBC.");
+            Class.forName(driver);
+            conexion = DriverManager.getConnection(url, usuario, clave);
+            System.out.println("✅ Conexión a MySQL exitosa.");
+        } catch (ClassNotFoundException | SQLException e) {
+            System.err.println("❌ Error de conexión a MySQL: " + e.getMessage());
         }
     }
 
-    public Connection getConexion() throws SQLException {
-        // Cada llamada crea y devuelve una nueva conexión. El llamador es responsable de cerrarla.
-        return DriverManager.getConnection(URL, USER, PASSWORD);
+    public Connection getConexion() {
+        return conexion;
     }
 
-    // Helper opcional para cerrar conexiones de forma segura
-    public static void cerrar(Connection c) {
-        if (c != null) {
-            try {
-                if (!c.isClosed()) c.close();
-            } catch (SQLException e) {
-                System.err.println("⚠️ Error al cerrar conexión: " + e.getMessage());
+    public void cerrarConexion() {
+        try {
+            if (conexion != null && !conexion.isClosed()) {
+                conexion.close();
+                System.out.println("🔒 Conexión cerrada correctamente.");
             }
+        } catch (SQLException e) {
+            System.err.println("❌ Error al cerrar conexión: " + e.getMessage());
         }
     }
 }
